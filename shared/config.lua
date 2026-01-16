@@ -21,17 +21,19 @@ MatchSettings.Weapons = {
 
 MatchSettings.Arenas = {
     ['predio'] = {
+        name = 'Prédio',
         weaponLoadout = 'heavy',
         spawnPoints = {
-            {x = 10.0, y = 20.0, z = 30.0, heading = 0.0},
-            {x = 15.0, y = 25.0, z = 35.0, heading = 180.0},
+            { x = -773.43, y = -608.03, z = 96.2, heading = 180.0 },
+            { x = -773.38, y = -628.27, z = 96.2, heading = 0.0 },
         },
     },
     ['garagem'] = {
+        name = 'Garagem',
         weaponLoadout = 'pistols',
         spawnPoints = {
-            {x = -10.0, y = -20.0, z = -30.0, heading = 90.0},
-            {x = -15.0, y = -25.0, z = -35.0, heading = 270.0},
+            { x = -285.99, y = -765.86, z = 43.61, heading = 68.04 },
+            { x = -315.28, y = -755.26, z = 43.61, heading = 249.45 },
         },
     }
 }

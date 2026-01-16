@@ -44,6 +44,14 @@ RegisterNetEvent('onPlayerDeath', function(attackerId)
     matchInstance:endMatch(victimId)
 end)
 
+--- Evento para retornar informações da fila e partidas.
+RegisterNetEvent('match:requestStats', function()
+    local queueCount = instances.Queue:getQueueCount()
+    local matchCount = Match.getMatchesCount()
+    
+    TriggerClientEvent('match:receiveStats', source, queueCount, matchCount)
+end)
+
 --- Thread inicial para definir instancias.
 Citizen.CreateThread(function()
     if not instances.Queue then

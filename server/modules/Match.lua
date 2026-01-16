@@ -40,56 +40,18 @@ function Match:start()
         if playerId then 
             local status = self:saveData(playerId)
             if status then 
-                self:teleport(playerId, position)
+                local playerPed = NetworkGetEntityFromNetworkId(playerId)
+                local playerSource = NetworkGetEntityOwner(playerPed) 
+
+                local spawnPoint = self.arena.spawnPoints[position]
+                local weapons = MatchSettings.Weapons[self.arena.weaponLoadout]
+
+                TriggerClientEvent('match:startMatch', playerSource, spawnPoint, weapons)
             end
         end
     end
+
     return true, 'Partida iniciada com sucesso na arena: ' .. self.arena.name
-end
-
---- Teleporta um jogador para o ponto de spawn designado.
---- @param playerId number
---- @param spawnPoint number
---- @return boolean, string
-function Match:teleport(playerId, spawnPoint)
-    local currentArena = self.arena
-    if (not currentArena) then
-        return false, 'Arena não definida para a partida.'
-    end
-
-    local spawnPoint = currentArena.spawnPoints[spawnPoint]
-    if (not spawnPoint) then
-        return false, 'Ponto de spawn não encontrado.'
-    end
-
-    local playerSource = NetworkGetEntityFromNetworkId(playerId)
-    local playerPed = GetPlayerPed(playerSource)
-
-    SetEntityCoords(playerPed, spawnPoint.x, spawnPoint.y, spawnPoint.z, false, false, false, true)
-    SetEntityHeading(playerPed, spawnPoint.heading)
-    return true, 'Jogador teleportado com sucesso.'
-end
-
---- Equipa o jogador com as armas designadas para a partida.
-function Match:weapon(playerId)
-    local currentArena = self.arena
-    if (not currentArena) then
-        return false, 'Arena não definida para a partida.'
-    end
-
-    local weaponLoadout = currentArena.weaponLoadout
-    local weapons = MatchSettings.Weapons[weaponLoadout]
-    if (not weapons) then
-        return false, 'Loadout de armas não encontrado.'
-    end
-
-    local playerSource = NetworkGetEntityFromNetworkId(playerId)
-    local playerPed = GetPlayerPed(playerSource)
-
-    for _, weapon in ipairs(weapons) do
-        GiveWeaponToPed(playerPed, GetHashKey(weapon), 250, false, true)
-    end
-    return true, 'Armas equipadas com sucesso.'
 end
 
 --- Salva os dados atuais do jogador antes do teleporte.
@@ -100,8 +62,8 @@ function Match:saveData(playerId)
         return false, 'Dados do jogador já salvos.'
     end
 
-    local playerSource = NetworkGetEntityFromNetworkId(playerId)
-    local playerPed = GetPlayerPed(playerSource)
+    local playerPed = NetworkGetEntityFromNetworkId(playerId)
+    local playerSource = NetworkGetEntityOwner(playerPed)
     
     local playerHealth = GetEntityHealth(playerPed)
     local playerArmor = GetPedArmour(playerPed)
@@ -124,13 +86,14 @@ function Match:restoreData(playerId)
         return false, 'Nenhum dado salvo encontrado para o jogador.'
     end
 
-    local playerSource = NetworkGetEntityFromNetworkId(playerId)
-    local playerPed = GetPlayerPed(playerSource)
+    local playerPed = NetworkGetEntityFromNetworkId(playerId)
+    local playerSource = NetworkGetEntityOwner(playerPed)
 
     TriggerClientEvent('health:update', playerSource, savedData.health)
     SetPedArmour(playerPed, savedData.armor)
     SetEntityCoords(playerPed, savedData.coords.x, savedData.coords.y, savedData.coords.z, false, false, false, true)
     SetEntityHeading(playerPed, savedData.heading)
+    RemoveAllPedWeapons(playerPed, true)
 
     self.savedData[playerId] = nil
     playersInMatch[playerId] = nil

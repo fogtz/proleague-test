@@ -20,9 +20,18 @@ function Queue:add(userId)
     self.queuedPlayers[userId] = true
     
     local canMatch, matchPlayers = self:checkMatch()
-    if canMatch then
+    if canMatch and matchPlayers then 
         Match.create(matchPlayers)
+        
+        for i = 1, #matchPlayers do
+            local playerId = matchPlayers[i]
+            if playerId then
+                self.queuedPlayers[playerId] = nil
+            end
+        end
     end
+    
+    TriggerClientEvent('match:receiveStats', -1, self:getQueueCount(), Match.getMatchesCount())
     return true, 'Jogador adicionado à fila com sucesso.'
 end
 
@@ -35,6 +44,7 @@ function Queue:remove(userId)
     end
 
     self.queuedPlayers[userId] = nil
+    TriggerClientEvent('match:receiveStats', -1, self:getQueueCount(), Match.getMatchesCount())
     return true, 'Jogador removido da fila com sucesso.'
 end
 
@@ -60,4 +70,14 @@ end
 --- @param userId number
 function Queue:isInQueue(userId)
     return self.queuedPlayers[userId] ~= nil
+end
+
+--- Retorna a quantidade de jogadores na fila.
+--- @return number
+function Queue:getQueueCount()
+    local count = 0
+    for _, _ in pairs(self.queuedPlayers) do
+        count = count + 1
+    end
+    return count
 end

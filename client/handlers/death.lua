@@ -8,3 +8,8 @@ AddEventHandler('gameEventTriggered', function(eventName, args)
 		TriggerServerEvent('onPlayerDeath', GetPlayerServerId(attackerId))
 	end
 end)
+
+RegisterNetEvent('health:update', function(health)
+    local playerPed = PlayerPedId()
+    SetEntityHealth(playerPed, health)
+end)

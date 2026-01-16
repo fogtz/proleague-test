@@ -14,6 +14,6 @@ server_scripts {
 }
 
 client_scripts {
-    'client/modules/health.lua',
+    'client/handlers/death.lua',
     'client/main.lua'
 }
