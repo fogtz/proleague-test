@@ -9,9 +9,11 @@ shared_script 'shared/config.lua'
 
 server_scripts {
     'server/modules/Queue.lua',
+    'server/modules/Match.lua',
     'server/main.lua'
 }
 
 client_scripts {
+    'client/modules/health.lua',
     'client/main.lua'
 }
