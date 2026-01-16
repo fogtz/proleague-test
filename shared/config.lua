@@ -22,14 +22,14 @@ MatchSettings.Weapons = {
 MatchSettings.Arenas = {
     ['predio'] = {
         weaponLoadout = 'heavy',
-        spawns = {
+        spawnPoints = {
             {x = 10.0, y = 20.0, z = 30.0, heading = 0.0},
             {x = 15.0, y = 25.0, z = 35.0, heading = 180.0},
         },
     },
     ['garagem'] = {
         weaponLoadout = 'pistols',
-        spawns = {
+        spawnPoints = {
             {x = -10.0, y = -20.0, z = -30.0, heading = 90.0},
             {x = -15.0, y = -25.0, z = -35.0, heading = 270.0},
         },

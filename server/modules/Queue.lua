@@ -19,9 +19,9 @@ function Queue:add(userId)
 
     self.queuedPlayers[userId] = true
     
-    local canMatch = self:checkMatch()
+    local canMatch, matchPlayers = self:checkMatch()
     if canMatch then
-        
+        Match.create(matchPlayers)
     end
     return true, 'Jogador adicionado à fila com sucesso.'
 end
@@ -39,10 +39,10 @@ function Queue:remove(userId)
 end
 
 --- Função para verificar se há jogadores suficientes para iniciar uma partida.
---- @return table | nil
+--- @return boolean, table | nil
 function Queue:checkMatch()
     if (not self.queuedPlayers) then
-        return nil
+        return false, {}
     end
 
     local players = {}
@@ -50,10 +50,10 @@ function Queue:checkMatch()
         table.insert(players, userId)
 
         if #players >= 2 then
-            return players
+            return true, players
         end
     end
-    return nil
+    return false, {}
 end
 
 --- Verifica se um jogador está na fila.

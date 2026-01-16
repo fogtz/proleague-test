@@ -26,6 +26,24 @@ RegisterCommand("x1", function(source, args, rawCommand)
     print(success, message)
 end, false)
 
+--- Evento para reconhecer a morte de um jogador na arena.
+RegisterNetEvent('onPlayerDeath', function(attackerId)
+    local victimSource = source
+    local victimPed = GetPlayerPed(victimSource)
+    local victimId = NetworkGetNetworkIdFromEntity(victimPed)
+
+    if (not victimId) then
+        return
+    end
+
+    local matchInstance = Match.getPlayerMatch(victimId)
+    if (not matchInstance) then
+        return
+    end
+
+    matchInstance:endMatch(victimId)
+end)
+
 --- Thread inicial para definir instancias.
 Citizen.CreateThread(function()
     if not instances.Queue then
